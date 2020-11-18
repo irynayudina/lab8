@@ -278,7 +278,7 @@ namespace lab8
     {
         class NodeInfo
         {
-            public Node NODE;
+            public Node NoDe;
             public string Text;
             public int StartPos;
             public int Size { get { return Text.Length; } }
@@ -290,25 +290,25 @@ namespace lab8
         {
             if (root == null) return;
             int rootTop = Console.CursorTop + topMargin;
-            var last = new List<NodeInfo>();
+            var last = new SingleLinkedList<NodeInfo>();
             var next = root;
             for (int level = 0; next != null; level++)
             {
-                var item = new NodeInfo { NODE = next, Text = next.Data.ToString(textFormat) };
-                if (level < last.Count)
+                var item = new NodeInfo { NoDe = next, Text = next.Data.ToString(textFormat) };
+                if (level < last.Count())
                 {
-                    item.StartPos = last[level].EndPos + spacing;
-                    last[level] = item;
+                    item.StartPos = last[level].data.EndPos + spacing;
+                    last[level].data = item;
                 }
                 else
                 {
                     item.StartPos = leftMargin;
-                    last.Add(item);
+                    last.InsertLast(last, item);//Add(item)
                 }
                 if (level > 0)
                 {
-                    item.Parent = last[level - 1];
-                    if (next == item.Parent.NODE.Left)
+                    item.Parent = last[level - 1].data;
+                    if (next == item.Parent.NoDe.Left)
                     {
                         item.Parent.Left = item;
                         item.EndPos = Math.Max(item.EndPos, item.Parent.StartPos - 1);
@@ -338,7 +338,7 @@ namespace lab8
                     if (item == item.Parent.Left)
                     {
                         item.Parent.StartPos = item.EndPos + 1;
-                        next = item.Parent.NODE.Right;
+                        next = item.Parent.NoDe.Right;
                     }
                     else
                     {
@@ -349,7 +349,7 @@ namespace lab8
                     }
                 }
             }
-            Console.SetCursorPosition(0, rootTop + 2 * last.Count - 1);
+            Console.SetCursorPosition(0, rootTop + 2 * last.Count() - 1);
         }
 
         private static void Print(string s, int top, int left, int right = -1)
